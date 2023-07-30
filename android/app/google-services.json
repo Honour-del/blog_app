@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "986081970428",
+    "project_id": "campus-lg",
+    "storage_bucket": "campus-lg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986081970428:android:3585c882b5849a9014ef79",
+        "android_client_info": {
+          "package_name": "com.example.explore_flutter_with_dart_3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986081970428-dke62023niotin5nffj7n55nb177stlk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcD_SMsrXpgnZoEcrB1mJC3iskstEzWgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986081970428-dke62023niotin5nffj7n55nb177stlk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "986081970428-9pfhkl33a7u321aoem6vu0a9h5cjmd5a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.exploreFlutterWithDart3"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
