@@ -1,10 +1,11 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/models/post.dart';
 import 'package:explore_flutter_with_dart_3/src/services/post/interface.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 class CreatePostImpl implements CreatePost{
 
@@ -14,12 +15,19 @@ class CreatePostImpl implements CreatePost{
     directoryName, uid, fileName
   }) async{
     try{
-      final file0 = await compressImage(file);
-      debugPrint('$file0 is successfully compressed');
+      html.Blob imageBlob = html.Blob([file]);
+
+
       final String imageFileName = '$directoryName/$uid/${DateTime.now().microsecondsSinceEpoch}_$fileName';
+      // final uint = await convertUint8List(file, imageFileName);
+      // final file0 = await compressImage(uint);
+      debugPrint(r'$file is successfully compressed');
+      html.File imageFile = html.File([imageBlob], '$imageFileName.png',
+          {'type': 'image/png'});
+      // final String imageFileName = '$directoryName/$uid/${DateTime.now().microsecondsSinceEpoch}_$fileName';
       final storage = storageRef.child(imageFileName);
 
-      UploadTask uploadTask = storage.putFile(file0);
+      UploadTask uploadTask = storage.putBlob(imageFile);
 
       TaskSnapshot taskSnapshot = await uploadTask;
 
@@ -38,7 +46,7 @@ class CreatePostImpl implements CreatePost{
   Future<void> uploadPost({
   required String uid,
   required String caption,
-  required File url,
+  required Uint8List url,
   required String username,
   required String avatarUrl,
     required String title, required String category,
@@ -52,7 +60,7 @@ class CreatePostImpl implements CreatePost{
         final data = <String, dynamic>{};
         data['post_id'] = postId;
         data['post_image_url'] = download;
-        data['body'] = caption;
+        data['caption'] = caption;
         data['user_id'] = uid;
         data['posted_at'] = dateTime;
         data['comments'] = [];
@@ -75,11 +83,11 @@ class CreatePostImpl implements CreatePost{
   Future<void> updatePost({
     required String uid,
     required String caption,
-    required File url,
+    required Uint8List url,
     required String username,
     required String avatarUrl,
-    required String title, required String category,
-    // List<CommentModel>? comments
+    required String title,
+    required String category,
   }) async{
     // TODO: implement uploadPost
     try{

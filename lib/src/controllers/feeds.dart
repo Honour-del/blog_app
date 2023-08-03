@@ -46,7 +46,7 @@ final fetchProvider = StateNotifierProvider.family<FetchPostController, AsyncVal
   return FetchPostController(ref: ref, category: category);
 });
 
-final justFetchProviderController = StateNotifierProvider((ref) {
+final justFetchProviderController = StateNotifierProvider<FetchPostController, AsyncValue<List<PostModel>>>((ref) {
   return FetchPostController(ref: ref);
 });
 

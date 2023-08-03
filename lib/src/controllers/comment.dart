@@ -1,8 +1,39 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/models/comment.dart';
 import 'package:explore_flutter_with_dart_3/src/services/comment/comment_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+
+final fetchCommentController = StreamProvider<List<CommentModel>>((ref) {
+  _listenToFeeds();
+  ref.onDispose(_cancelFeedSubscription);
+  return getCommentsK();
+});
+
+final StreamController<List<CommentModel>> _advertsController = StreamController<List<CommentModel>>.broadcast();
+Stream<List<CommentModel>> getCommentsK (){
+  return _advertsController.stream;
+}
+// TODO
+void _listenToFeeds(){
+  commentsRef.snapshots().listen((querySnapshot) {
+    final comments = querySnapshot.docs.map((e) => CommentModel.fromJson(e.data())).toList();
+    _advertsController.add(comments);
+  });
+}
+
+void _cancelFeedSubscription(){
+  _advertsController.close();
+}
+
+
+
+
+
+
 
 final commentProvider =
 StateNotifierProvider<CommentController, AsyncValue<List<CommentModel>>>(
@@ -47,6 +78,16 @@ class CommentController extends StateNotifier<AsyncValue<List<CommentModel>>>{
     try {
       final comments =
       _ref?.read(commentServiceProvider).getComments(postId: postId);
+      return comments!;
+    } on FirebaseException catch (e, _) {
+      throw e.message!;
+    }
+  }
+
+  Stream<List<CommentModel>> getAllComments()  {
+    try {
+      final comments =
+      _ref?.read(commentServiceProvider).getAllComments();
       return comments!;
     } on FirebaseException catch (e, _) {
       throw e.message!;

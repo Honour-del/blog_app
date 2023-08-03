@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:explore_flutter_with_dart_3/src/models/post.dart';
 import 'package:explore_flutter_with_dart_3/src/services/post/posts_impl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +35,7 @@ abstract class CreatePost {
   Future<void> uploadPost({
     required String uid,
     required String caption,
-    required File url,
+    required Uint8List url,
     required String username,
     required String avatarUrl,
     required String title,
@@ -47,7 +48,7 @@ abstract class CreatePost {
   Future<void> updatePost({
     required String uid,
     required String caption,
-    required File url,
+    required Uint8List url,
     required String username,
     required String avatarUrl,
     required String title,
@@ -57,7 +58,7 @@ abstract class CreatePost {
   });
 
 
-  Future<dynamic> uploadImage({required File file, directoryName, uid, fileName});
+  Future<dynamic> uploadImage({required Uint8List file, directoryName, uid, fileName});
 
   Future<bool> deletePost({
     required String postId});

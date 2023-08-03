@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explore_flutter_with_dart_3/src/services/post/interface.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +29,7 @@ class CreatePostController extends StateNotifier{
       await ref?.read(createpostServiceProvider).uploadTextPost(uid: uid, caption: caption, username: username, avatarUrl: avatarUrl, title: title, category: category);
     } on FirebaseException catch (e, _) {
       print(e.message);
-      rethrow;
+      throw e;
     }
   }
 
@@ -37,7 +38,7 @@ class CreatePostController extends StateNotifier{
     required String uid,
     required String caption,
     required String username,
-    required File url,
+    required Uint8List url,
     required String avatarUrl,
     required String title,
     required String category,
@@ -51,7 +52,7 @@ class CreatePostController extends StateNotifier{
   }
 
   Future<void> uploadImage({
-    required File file
+    required Uint8List file
   }) async {
     try {
       await ref?.read(createpostServiceProvider).uploadImage(file: file);

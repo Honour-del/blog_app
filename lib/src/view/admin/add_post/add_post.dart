@@ -7,11 +7,11 @@ import 'package:explore_flutter_with_dart_3/src/view/admin/add_post/component/dr
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/text_field.dart';
 import 'package:flutter/foundation.dart';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:image_picker_web/image_picker_web.dart';
 
 
 class AddPost extends ConsumerStatefulWidget {
@@ -28,7 +28,6 @@ TextEditingController _title = TextEditingController();
 TextEditingController _category = TextEditingController();
 TextEditingController _body = TextEditingController();
 TextEditingController _author = TextEditingController();
-TextEditingController _description = TextEditingController();
 
 
 
@@ -36,7 +35,6 @@ class _AddPostState extends ConsumerState<AddPost> {
 
   // List<int>? _selectedFile;
   final List<dynamic> _pickedImages = [];
-  Uint8List? _bytesData;
   String? selectedValue;
 
   bool isLoading = false;
@@ -51,10 +49,16 @@ class _AddPostState extends ConsumerState<AddPost> {
         physics: const BouncingScrollPhysics(),
         child: Form(
           key: postKey,
-          child: Responsive(
-              mobile: _mobile(),
-              desktop: _desktop(),
-            tablet: _tablet(),
+          child: Stack(
+            children: [
+              Responsive(
+                  mobile: _mobile(),
+                  desktop: _desktop(),
+                tablet: _tablet(),
+              ),
+              if(isLoading)
+                kProgressIndicator,
+            ],
           ),
         ),
       ),
@@ -181,17 +185,13 @@ class _AddPostState extends ConsumerState<AddPost> {
           ),
         ),
 
-        // if(_bytesData != null)
-        //   Image.memory(_bytesData!, width: 200, height: 200,),
-
-        (_pickedImages != null) ?
+        (_pickedImages.isNotEmpty) ?
         Padding(
           padding: const EdgeInsets.only(top: 15),
           child: Container(
             padding: const EdgeInsets.symmetric(
               vertical: 20,
             ),
-            //     height: 80,
             height: getProportionateScreenHeight(400),
             width: MediaQuery.sizeOf(context).width * 0.35,
             child: ListView.separated(
@@ -233,51 +233,55 @@ class _AddPostState extends ConsumerState<AddPost> {
 
 
   createPost() async{
-    if(widget.initialPostId!.isNotEmpty){
-      /// TODO update post
-    }
-    else{
-      // Create post
-      if(_body.text.isNotEmpty || _title.text.isNotEmpty || selectedValue!.isNotEmpty || _author.text.isNotEmpty){
-        postKey.currentState!.save();
-        setState(() {
-          isLoading = true;
-        });
-        final user = ref.read(userDetailProvider).value; //TODO: await removed
-        final post = ref.read(createPostProvider.notifier);
-        debugPrint('Uploading post');
-        if(_pickedImages  != null){
-          debugPrint('Path: ${_pickedImages.length}');
-          await post.uploadPost(
-            caption: _body.text,
-            url: _pickedImages.first, // upload only the first image
-            title: _title.text,
-            category: selectedValue!,
-            uid: user!.id, username: _author.text,  avatarUrl: user.avatarUrl,
-          ).catchError((err){
-            showSnackBar(context, text: "Error: $err");
-            throw err;
+    if(_body.text.isNotEmpty || _title.text.isNotEmpty || selectedValue!.isNotEmpty || _author.text.isNotEmpty){
+      postKey.currentState!.save();
+      setState(() {
+        isLoading = true;
+      });
+      final user = ref.read(userDetailProvider).value; //TODO: await removed
+      final post = ref.read(createPostProvider.notifier);
+      debugPrint('Uploading post');
+      if(_pickedImages.isNotEmpty){
+        // debugPrint('Path: ${_pickedImages.length}');
+        await post.uploadPost(
+          caption: _body.text,
+          url: _pickedImages.first, // upload only the first image
+          title: _title.text,
+          category: selectedValue!,
+          uid: user!.id, username: _author.text,  avatarUrl: 'user.avatarUrl',
+        ).catchError((err){
+          setState(() {
+            isLoading= false;
           });
-        } else{
-          debugPrint('Media-less post');
-          await post.uploadTextPost(uid: user!.id, username: user.username,
-            title: _title.text,
-            category: selectedValue!,
-            avatarUrl: user.avatarUrl,
-            caption: _body.text,
-          ).catchError((err){
-            showSnackBar(context, text: "Error: $err");
-            throw err;
-          });
-        }
-        setState(() {
-          isLoading = false;
+          showSnackBar(context, text: "Error: $err");
+          throw err;
         });
-        if(!mounted) return;
-        showSnackBar(context, text: "Post successfully uploaded");
       } else{
-        showSnackBar(context, text: "Title, Author, Content and Category field can't be empty");
+        debugPrint(selectedValue);
+        debugPrint('Media-less post');
+        await post.uploadTextPost(uid: user!.id, username: 'user.username',
+          title: _title.text,
+          category: selectedValue!,
+          avatarUrl: 'user.avatarUrl',
+          caption: _body.text,
+        ).catchError((err){
+          setState(() {
+            isLoading = false;
+          });
+          showSnackBar(context, text: "Error: $err");
+          throw err;
+        });
       }
+      setState(() {
+        isLoading = false;
+      });
+      if(!mounted) return;
+      showSnackBar(context, text: "Post successfully uploaded");
+    } else{
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(context, text: "Title, Author, Content and Category field can't be empty");
     }
   }
 
@@ -291,7 +295,6 @@ class _AddPostState extends ConsumerState<AddPost> {
     child: Column(
       children: [
         const SizedBox(height: 20,),
-
          Center(
           child: Text(
             'Create a post',
@@ -391,10 +394,7 @@ class _AddPostState extends ConsumerState<AddPost> {
           ),
         ),
 
-        // if(_bytesData != null)
-        //   Image.memory(_bytesData!, width: 200, height: 200,),
-
-        (_pickedImages != null) ?
+        (_pickedImages.isNotEmpty) ?
         Padding(
           padding: const EdgeInsets.only(top: 15),
           child: Container(
@@ -475,10 +475,6 @@ class _AddPostState extends ConsumerState<AddPost> {
                 controller: _title,
               ),
             ),
-
-
-            // SizedBox(width: getProportionateScreenHeight(7),),
-
 
             const SizedBox(width: 25,),
             Expanded(
@@ -563,10 +559,7 @@ class _AddPostState extends ConsumerState<AddPost> {
           ],
         ),
 
-        // if(_bytesData != null)
-        //   Image.memory(_bytesData!, width: 200, height: 200,),
-
-        (_pickedImages != null) ?
+        (_pickedImages.isNotEmpty) ?
           Padding(
             padding: const EdgeInsets.only(top: 15),
             child: Container(

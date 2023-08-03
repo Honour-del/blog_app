@@ -1,8 +1,9 @@
-
+import 'package:explore_flutter_with_dart_3/src/controllers/advert.dart';
 import 'package:explore_flutter_with_dart_3/src/controllers/comment.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/screen_size.dart';
+import 'package:explore_flutter_with_dart_3/src/widgets/advert_widget.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/text_field.dart';
 import 'package:flutter/material.dart';
@@ -10,30 +11,54 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CommentAndSubscribe extends ConsumerStatefulWidget {
   const CommentAndSubscribe({Key? key, required this.i, required this.ii, required this.iii, required this.iv, this.postId,}) : super(key: key);
-
   final TextEditingController i;
   final TextEditingController ii;
   final TextEditingController iii;
   final TextEditingController iv;
-
   final String? postId;
-
 
   @override
   ConsumerState<CommentAndSubscribe> createState() => _CommentAndSubscribeState();
 }
-final key = GlobalKey<FormState>();
+GlobalKey<FormState> _key = GlobalKey<FormState>();
 bool loading = false;
 
 class _CommentAndSubscribeState extends ConsumerState<CommentAndSubscribe> {
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    // final advert = ref.watch(createAdvertControllerProvider.notifier).fetchAdverts();
+    final advert2 = ref.watch(fetchAdvertController);
+    final aDay = advert2.value?.where((e) => e.category == "1 day").where((n) => now.difference(n.createdAt.toDate()).inHours <= 24).toList();
+    // final aDay = advert.map((event) => event.where((e) => e.category == "1 day").where((n) => now.difference(n.createdAt.toDate()).inHours <= 24)).toList();
+    final threeDay = advert2.value?.where((e) => e.category == "3 days").where((n) => now.difference(n.createdAt.toDate()).inHours <= 72).toList();
+    final aWeek = advert2.value?.where((e) => e.category == "A week").where((n) => now.difference(n.createdAt.toDate()).inHours <= 168).toList();
+    // final aWeek = advert.value?.where((e) => e.category == "A week").where((n) => now.difference(n.createdAt.toDate()).inHours <= 168).toList();
     return Form(
-      key: key,
+      key: _key,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'ADVERTISEMENT',
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: Responsive.isMobile(context) ? getFontSize(17) : getFontSize(5),
+                  fontWeight: FontWeight.w700
+              ),
+            ),
+          ),
+          const Divider(),
+          SizedBox(height: getProportionateScreenHeight(15),),
+          if(aDay!.isNotEmpty)
+            ...aDay.map((e) => AdvertWidget(caption: e.caption, image: e.advertImageUrl,)),
+          if(threeDay!.isNotEmpty)
+            ...threeDay.map((e) => AdvertWidget(caption: e.caption, image: e.advertImageUrl,)),
+          if(aWeek!.isNotEmpty)
+            ...aWeek.map((e) => AdvertWidget(caption: e.caption, image: e.advertImageUrl,)),
           Align(
             alignment: Alignment.topLeft,
             child: Text(
@@ -84,6 +109,13 @@ class _CommentAndSubscribeState extends ConsumerState<CommentAndSubscribe> {
             x: 6,
             keyboardType: TextInputType.text,
             controller: widget.i,
+            validator: (value){
+              if(widget.i.text.isEmpty){
+                return 'Comment must be filled';
+              } else {
+                return null;
+              }
+            },
           ),
           SizedBox(height: getProportionateScreenHeight(12),),
 
@@ -92,6 +124,13 @@ class _CommentAndSubscribeState extends ConsumerState<CommentAndSubscribe> {
             hint: '',
             keyboardType: TextInputType.text,
             controller: widget.ii,
+            validator: (value){
+              if(widget.ii.text.isEmpty){
+                return 'Name must be filled';
+              } else {
+                return null;
+              }
+            },
           ),
           SizedBox(height: getProportionateScreenHeight(12),),
 
@@ -117,18 +156,20 @@ class _CommentAndSubscribeState extends ConsumerState<CommentAndSubscribe> {
                 color: Theme.of(context).canvasColor
             ),
             onTap: (){
-              key.currentState!.save();
-              setState(() {
-                loading = true;
-              });
-              ref.read(commentProvider.notifier).addComment(
-                postId: widget.postId!,
-                comment: widget.i.text,
-                userName: widget.ii.text,
-              );
-              setState(() {
-                loading = false;
-              });
+              if(_key.currentState!.validate()){
+                _key.currentState!.save();
+                setState(() {
+                  loading = true;
+                });
+                ref.read(commentProvider.notifier).addComment(
+                  postId: widget.postId!,
+                  comment: widget.i.text,
+                  userName: widget.ii.text,
+                );
+                setState(() {
+                  loading = false;
+                });
+              }
             },
           ),
           SizedBox(height: getProportionateScreenHeight(17),),
@@ -167,7 +208,6 @@ class _CommentAndSubscribeState extends ConsumerState<CommentAndSubscribe> {
               onTap: (){},
             ),
           ),
-
         ],
       ),
     );

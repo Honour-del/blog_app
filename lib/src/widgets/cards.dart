@@ -11,7 +11,7 @@ class PostCard extends StatelessWidget {
     this.title,
     this.dateTime,
     this.authorName,
-    this.post_image_url
+    this.postImageUrl
   }) : super(key: key);
 
   final double? height;
@@ -19,7 +19,7 @@ class PostCard extends StatelessWidget {
   final String? title;
   final String? dateTime;
   final String? authorName;
-  final String? post_image_url;
+  final String? postImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +50,12 @@ class PostCard extends StatelessWidget {
                 child: Container(
                 height: height ?? getProportionateScreenHeight(220),
                 width: width ?? 0,
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    // image: DecorationImage(
-                    //   image: NetworkImage(post_image_url!),
-                    // )
+                  decoration: BoxDecoration(
+                    // color: Colors.blue,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    image: postImageUrl!.isNotEmpty ? DecorationImage(
+                      image: NetworkImage(postImageUrl!),
+                    ) : null,
                   ),
               ),),
               const SizedBox(width: 10,),
@@ -67,7 +67,7 @@ class PostCard extends StatelessWidget {
                   children: [
                     const SizedBox(height: 14,),
                     Text(
-                      'Tough Times As Students In Nigeria.',
+                      title! ,//?? 'Tough Times As Students In Nigeria.'
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -93,16 +93,14 @@ class PostCard extends StatelessWidget {
                             ),
                             const WidgetSpan(child: SizedBox(width: 1,)),
                             TextSpan(
-                                text: 'DateTime',
+                                text: dateTime,
                                 style: TextStyle(
                                   color: Theme.of(context).canvasColor,
                                   fontSize: Responsive.isMobile(context) ? getFontSize(12) :  getFontSize(4.5),
                                 )
                             ),
-
                           ]
                         )),
-
 
                         RichText(text: TextSpan(
                             children: [
@@ -115,7 +113,7 @@ class PostCard extends StatelessWidget {
                               ),
                               const WidgetSpan(child: SizedBox(width: 1,)),
                               TextSpan(
-                                  text: 'DateTime',
+                                  text: authorName,
                                   style: TextStyle(
                                     color: Theme.of(context).canvasColor,
                                     fontSize: Responsive.isMobile(context) ? getFontSize(12) :  getFontSize(4.5),

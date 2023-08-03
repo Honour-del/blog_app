@@ -107,7 +107,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
       });
       ref.read(loadingProvider.notifier).state = true;
       final auth  = await ref.read(authControllerProvider.notifier);
-      final response = await auth.register(email:_email.text, password: _password.text);
+      final response = await auth.login(_email.text, _password.text);
       // final response = await auth.login(_email.text, _password.text);
       //// after login function is completed
       response.fold((e) {

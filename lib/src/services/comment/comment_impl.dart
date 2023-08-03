@@ -47,4 +47,12 @@ class CommentsRepoImpl implements CommentsRepo{
         .map((event) => event.docs.map((e) => CommentModel.fromJson(e.data())
     ).toList());
   }
+
+  @override
+  Stream<List<CommentModel>> getAllComments() {
+    // TODO: implement getComments
+    return commentsRef.orderBy('comment_created_at', descending: true).snapshots()
+        .map((event) => event.docs.map((e) => CommentModel.fromJson(e.data())
+    ).toList());
+  }
 }

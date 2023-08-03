@@ -45,6 +45,9 @@ class _PostListState extends ConsumerState<PostList> {
               const SizedBox(height: 30,),
               fullList.when(
                   data: (posts){
+                    if(posts.isEmpty){
+                      return emptyWidget(context);
+                    }
                     if(Responsive.isMobile(context)) {
                       return ListView.builder(
                         itemCount: posts.length,
@@ -73,7 +76,7 @@ class _PostListState extends ConsumerState<PostList> {
                               title: post.title,
                               authorName: post.authorName,
                               dateTime: timeago.format(post.createdAt.toDate()),
-                              post_image_url: post.postImageUrl,
+                              postImageUrl: post.postImageUrl,
                             ),
                           );
                         }
@@ -85,7 +88,7 @@ class _PostListState extends ConsumerState<PostList> {
                         itemCount: posts.length,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
+                          crossAxisCount: 3,
                           childAspectRatio: 2,
                           crossAxisSpacing: 25,
                           mainAxisSpacing: 25,
@@ -114,7 +117,7 @@ class _PostListState extends ConsumerState<PostList> {
                               title: post.title,
                               authorName: post.authorName,
                               dateTime: timeago.format(post.createdAt.toDate()),
-                              post_image_url: post.postImageUrl,
+                              postImageUrl: post.postImageUrl,
                             ),
                           );
                         }

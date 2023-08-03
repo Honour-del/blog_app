@@ -1,20 +1,24 @@
+import 'package:explore_flutter_with_dart_3/src/controllers/auth.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/screen_size.dart';
 import 'package:explore_flutter_with_dart_3/src/view/admin/add_post/add_post.dart';
+import 'package:explore_flutter_with_dart_3/src/view/admin/advertisement/advertisement.dart';
 import 'package:explore_flutter_with_dart_3/src/view/admin/post_lists/post_lists.dart';
+import 'package:explore_flutter_with_dart_3/src/view/public/homepage/home_page.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-class Dashboard extends StatefulWidget {
+class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  ConsumerState<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends ConsumerState<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +81,8 @@ class _DashboardState extends State<Dashboard> {
           color: Theme.of(context).scaffoldBackgroundColor
       ),
       onTap: (){
-
+        ref.read(authControllerProvider.notifier).logout();
+        pushReplacement(context, const HomePage());
       },
     );
   }
@@ -93,8 +98,10 @@ Widget _mobile() => Center(
         ),
         const SizedBox(height: 15,),
         _Cards(
-          onTap: (){},
-          label: "Manage subscribers",
+          onTap: (){
+            push(context, const Advertise());
+          },
+          label: "Manage Advertisement",
           iconData: Icons.people,
         ),
 
@@ -133,8 +140,10 @@ Widget _mobile() => Center(
         children: [
           Expanded(
             child: _Cards(
-              onTap: (){},
-              label: "Manage subscribers",
+              onTap: (){
+                push(context, const Advertise());
+              },
+              label: "Manage Advertisement",
               iconData: Icons.people,
             ),
           ),

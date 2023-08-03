@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_web_libraries_in_flutter, unnecessary_null_comparison
 
-import 'package:explore_flutter_with_dart_3/src/controllers/create_post.dart';
+import 'package:explore_flutter_with_dart_3/src/controllers/advert.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/screen_size.dart';
@@ -30,7 +30,6 @@ TextEditingController _title = TextEditingController();
 TextEditingController _category = TextEditingController();
 TextEditingController _body = TextEditingController();
 TextEditingController _author = TextEditingController();
-TextEditingController _description = TextEditingController();
 
 
 
@@ -205,52 +204,36 @@ class _AdvertiseState extends ConsumerState<Advertise> {
 
 
   createPost() async{
-    if(widget.initialPostId!.isNotEmpty){
-      /// TODO update post
-    }
-    else{
       // Create post
       if(_body.text.isNotEmpty || _title.text.isNotEmpty || selectedValue!.isNotEmpty || _author.text.isNotEmpty){
         postKey.currentState!.save();
         setState(() {
           isLoading = true;
         });
-        final user = ref.read(userDetailProvider).value; //TODO: await removed
-        final post = ref.read(createPostProvider.notifier);
-        debugPrint('Uploading post');
-        if(_pickedImages  != null){
-          debugPrint('Path: ${_pickedImages.length}');
-          await post.uploadPost(
+        // final user = ref.read(userDetailProvider).value; //TODO: await removed
+        final post = ref.read(createAdvertControllerProvider.notifier);
+        debugPrint('Uploading advert');
+        debugPrint(_body.text);
+        debugPrint(selectedValue!);
+        debugPrint(_pickedImages.first.toString());
+          await post.uploadAdvert(
             caption: _body.text,
             url: _pickedImages.first, // upload only the first image
-            title: _title.text,
             category: selectedValue!,
-            uid: user!.id, username: _author.text,  avatarUrl: user.avatarUrl,
+            uid: "user!.id",
           ).catchError((err){
             showSnackBar(context, text: "Error: $err");
             throw err;
           });
-        } else{
-          debugPrint('Media-less post');
-          await post.uploadTextPost(uid: user!.id, username: user.username,
-            title: _title.text,
-            category: selectedValue!,
-            avatarUrl: user.avatarUrl,
-            caption: _body.text,
-          ).catchError((err){
-            showSnackBar(context, text: "Error: $err");
-            throw err;
-          });
-        }
         setState(() {
           isLoading = false;
         });
         if(!mounted) return;
-        showSnackBar(context, text: "Post successfully uploaded");
+        showSnackBar(context, text: "Advert successfully uploaded");
+
       } else{
         showSnackBar(context, text: "Title, Author, Content and Category field can't be empty");
       }
-    }
   }
 
   Widget _mobile()=> Padding(
@@ -464,7 +447,7 @@ class _AdvertiseState extends ConsumerState<Advertise> {
                 child: DropDownk(
                     hint: 'Select category',
                     value: selectedValue,
-                    dropdownItems: categoryItems,
+                    dropdownItems: advertCategoryItems,
                     onChanged: (value){
                       setState(() {
                         selectedValue = value;

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
@@ -23,7 +24,7 @@ final loadingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 
 
-const String avatar = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fanonymous&psig=AOvVaw3lBhfzZfAXfhMX736Xcnbl&ust=1690647301808000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCLDbmq3msYADFQAAAAAdAAAAABAE';
+const String avatar = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAHYAsQMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAAAwUBAgQHBv/EACoQAQACAgECBQMEAwAAAAAAAAABAgMREgQhBRMxQVEGImFxgcHRMkKR/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAIBA//EABwRAQACAgMBAAAAAAAAAAAAAAABEQIhIjFBEv/aAAwDAQACEQMRAD8A8NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnQMAAAAAAAAAAAAAAAAAAAAAA2pG5dVcMzG+KDDWbTqEvHJjneO0zpWLJbWwR2b4eki860zTqPNjWSv3R+2209X5M6pXv+jpx7TvpJk8NtWvLj2+Vdnx8La9JWWGMvVRa2TJER+e8y4utx+XbjvevdymFQ5QGNAAAAAAAAAAAAAAAAT9PWb241nUynydNmpPad/mHLjtMTuHZTq7f495/Dpj81tM20wYrTnxxff3WiH0X1D9NdT0FsWTpOn8zpsmGk8+0zFpjcqTFblmw2ntHOP2eqeP5b5vpnBn6SkZ5pjpFscW1Mx6dv0dJxikXt5z4b4N1mW8+ZPkU9edp/j3/AOKzxbH5Wfy4vziv+3ysL+K5q5ON8eWmt/baNeip6683y8rTO59XLKvFxbmAQoAAAAAAAAAAAAAAABmJ1O4T0m24tTW59pc7eltdvZsEpL3vy9OK98I8X62vHFGDJnpjrNcVad4rv1n4/pSXyWrXdbO/o8mTJg55c1prHbjvULvaUvX5MmTPfJ1PGMkx3rWdxSvxv5lS5rc8kz+U/VZ+czFff1cqJbAAxoAAAAAAAAAAAAAAAAADblOtN4zWjFwjtCIBlgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/Z';
 const String body = '''
 INTRODUCTION
 The Student Industrial Work Experience Scheme is six months programme to enable students on the acquisition of some practical skills and experience. This serves as a vital means in contributing immensely to the practical training of young Engineers and also the production of quality manpower for the nation in the nearest future. It is important as well that students are exposed to latest developments and technological innovations in their chosen professions.
@@ -80,6 +81,7 @@ void showSnackBar(
 
 final usersRef = FirebaseFirestore.instance.collection("users");
 final postsRef= FirebaseFirestore.instance.collection("posts");
+final advertsRef= FirebaseFirestore.instance.collection("adverts");
 final commentsRef = FirebaseFirestore.instance.collection("comments");
 var storageRef = FirebaseStorage.instance.ref();
 
@@ -91,6 +93,16 @@ Center kProgressIndicator = const Center(
     ),
   ),
 );
+
+
+/* Function to convert UintList to File */
+Future<File> convertUint8List(Uint8List data, String fileName) async{
+  // final tempDir = await getTemporaryDirectory();
+  // final file = File('${tempDir.path}/$fileName');
+  final file = File.fromRawPath(data);
+  await file.writeAsBytes(data);
+  return file;
+}
 
 
 /* Function to compress images before uploading */
@@ -234,6 +246,10 @@ class BouncyPageRoute extends PageRouteBuilder{
 
 push(context, route){
   Navigator.of(context).push(BouncyPageRoute(widget: route));
+}
+
+pushReplacement(context, route){
+  Navigator.of(context).pushReplacement(BouncyPageRoute(widget: route));
 }
 
 pop(context){

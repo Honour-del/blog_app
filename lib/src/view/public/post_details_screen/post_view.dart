@@ -1,5 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
-
+import 'package:explore_flutter_with_dart_3/src/controllers/comment.dart';
 import 'package:explore_flutter_with_dart_3/src/controllers/feeds.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
@@ -8,7 +8,6 @@ import 'package:explore_flutter_with_dart_3/src/models/post.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/component/comment_and_subscribe.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/footer.dart';
-import 'package:explore_flutter_with_dart_3/src/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -45,9 +44,9 @@ class _PostViewState extends ConsumerState<PostView> {
   }
 
 
-  //
   Widget _mobile() {
     final category = ref.watch(newFeedProvider).value?.where((element) => element.category == widget.post!.category);
+    final comment = ref.watch(fetchCommentController).value?.where((element) => element.postId == widget.post!.postId);
     return Padding(
       padding: padding.padding,
       child: Column(
@@ -56,7 +55,7 @@ class _PostViewState extends ConsumerState<PostView> {
           Align(
             alignment: Alignment.topLeft,
             child: Text(
-              'Tuition Hike: Naus Threatens Mass Protest',
+              widget.post!.title!,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.w800,
@@ -72,10 +71,12 @@ class _PostViewState extends ConsumerState<PostView> {
           ),
 
           SizedBox(height: getProportionateScreenHeight(20),),
-
+          if(widget.post!.postImageUrl.isNotEmpty)
+            Image.network(widget.post!.postImageUrl),
+          SizedBox(height: getProportionateScreenHeight(20),),
           Center(
             child: Text(
-              body,
+              widget.post!.caption,
               // textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
@@ -100,15 +101,76 @@ class _PostViewState extends ConsumerState<PostView> {
             _categoryHeader(title: "More on ${category.first.category.toString()}"),
           ...category.map((e) => GestureDetector(
             onTap: (){
-              push(context, const PostView());
+              push(context, PostView(
+                post: e,
+              ));
             },
             child: PostCard(
+              title: e.title,
               authorName: e.authorName,
               dateTime: timeago.format(e.createdAt.toDate()),
-              post_image_url: e.postImageUrl,
+              postImageUrl: e.postImageUrl,
             ),
           )),
 
+          SizedBox(height: getProportionateScreenHeight(20),),
+          if(comment!.isNotEmpty)
+            _categoryHeader(title: 'Comments'),
+          ...comment.map((e) {
+            return Padding(
+                padding: EdgeInsets.only(left: getProportionateScreenWidth(20), right: getProportionateScreenWidth(20),
+                  bottom: 20,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(12, 13, 12, 11),
+                  margin:
+                  EdgeInsets.symmetric(vertical: getProportionateScreenHeight(10)),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.15),
+                          blurRadius: 5,
+                        ),
+                      ]),
+                  constraints: const BoxConstraints(
+                    minWidth: 0.0,
+                    minHeight: 0.0,
+                    maxWidth: double.infinity,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            e.username!,
+                            style: TextStyle(fontSize: 16.5, color: Colors.grey[900]),
+                          ),
+                          const SizedBox(height: 2.5,),
+                          Text(
+                            timeago.format(e.commentCreatedAt!.toDate()),
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(fontSize: 12.0, color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                        child: Text(
+                          e.comment!,
+                          style: const TextStyle(fontWeight: FontWeight.w400,),
+                        ),
+                      ),
+                    ],
+                  ),
+                ));
+          },),
 
           SizedBox(height: getProportionateScreenHeight(20),),
           const Footer(),
@@ -139,6 +201,7 @@ class _PostViewState extends ConsumerState<PostView> {
 
   Widget _desktop() {
     final category = ref.watch(newFeedProvider).value?.where((element) => element.category == widget.post!.category);
+    final comment = ref.watch(fetchCommentController).value?.where((element) => element.postId == widget.post!.postId);
     return Padding(
       padding: EdgeInsets.only(
           left: getProportionateScreenWidth(20),
@@ -147,6 +210,7 @@ class _PostViewState extends ConsumerState<PostView> {
           bottom: getProportionateScreenHeight(60)  //70
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -154,15 +218,16 @@ class _PostViewState extends ConsumerState<PostView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
+              Flexible(
                 flex: 3,
+                fit: FlexFit.loose,
                 child: Column(
                   children: [
                     SizedBox(height: getProportionateScreenHeight(30),),
                     Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Tuition Hike: Naus Threatens Mass Protest',
+                        widget.post!.title ??'Tuition Hike: Naus Threatens Mass Protest',
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w800,
@@ -178,11 +243,14 @@ class _PostViewState extends ConsumerState<PostView> {
                     ),
 
                     SizedBox(height: getProportionateScreenHeight(20),),
+                    if(widget.post!.postImageUrl.isNotEmpty)
+                      Image.network(widget.post!.postImageUrl),
+                    SizedBox(height: getProportionateScreenHeight(20),),
 
                     Center(
                       child: Text(
-                        body,
-                        textAlign: TextAlign.justify,
+                        widget.post!.caption,
+                        // textAlign: TextAlign.justify,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: getFontSize(10),
@@ -197,38 +265,16 @@ class _PostViewState extends ConsumerState<PostView> {
 
                     if(category!.isNotEmpty)
                       _categoryHeader(title: "More on ${category.first.category.toString()}"),
-                    ...category.map((e) => Expanded(
-                      flex: 3,
-                      child: GridView.builder(
-                          shrinkWrap: true,
-                          // itemCount: data.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 2,
-                            crossAxisSpacing: 25,
-                            mainAxisSpacing: 25,
-                          ),
-                          itemBuilder: (context, index) {
-                            // final post = data[index];
-                            return GestureDetector(
-                              onTap: (){
-                                push(context, PostView(
-                                  post: e,
-                                ));
-                              },
-                              child: PostCard(
-                                title: e.title,
-                                authorName: e.authorName,
-                                dateTime: timeago.format(e.createdAt.toDate()),
-                                post_image_url: e.postImageUrl,
-                              ),
-                            );
-                          }
+                    ...category.map((post) => Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: PostCard(
+                        title: post.title,
+                        authorName: post.authorName,
+                        dateTime: timeago.format(post.createdAt.toDate()),
+                        postImageUrl: post.postImageUrl,
                       ),
-                    ),),
+                    )),
 
-                    // const Spacer()
                   ],
                 ),
               ),
@@ -246,6 +292,67 @@ class _PostViewState extends ConsumerState<PostView> {
               ),
             ],
           ),
+
+          // Todo: comments
+          const SizedBox(height: 24,),
+        if(comment!.isNotEmpty)
+          _categoryHeader(title: 'Comments'),
+          ...comment.map((e) {
+            return Padding(
+                padding: EdgeInsets.only(left: getProportionateScreenWidth(20), right: getProportionateScreenWidth(20),
+                  bottom: 20,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(12, 13, 12, 11),
+                  margin:
+                  EdgeInsets.symmetric(vertical: getProportionateScreenHeight(10)),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.15),
+                          blurRadius: 5,
+                        ),
+                      ]),
+                  constraints: const BoxConstraints(
+                    minWidth: 0.0,
+                    minHeight: 0.0,
+                    maxWidth: double.infinity,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            e.username!,
+                            style: TextStyle(fontSize: 16.5, color: Colors.grey[900]),
+                          ),
+                          const SizedBox(height: 2.5,),
+                          Text(
+                            timeago.format(e.commentCreatedAt!.toDate()),
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(fontSize: 12.0, color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                        child: Text(
+                          e.comment!,
+                          style: const TextStyle(fontWeight: FontWeight.w400,),
+                        ),
+                      ),
+                    ],
+                  ),
+                ));
+          },),
+
           const SizedBox(height: 24,),
           const Footer()
         ],

@@ -36,6 +36,8 @@ factory CommentsRepo () => CommentsRepoImpl();
 
   Stream<List<CommentModel>> getComments({postId});
 
+  Stream<List<CommentModel>> getAllComments();
+
   Future<bool> deleteComments({required String userId, required String commentId});
 }
 

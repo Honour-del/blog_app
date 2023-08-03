@@ -35,7 +35,7 @@ class PostModel {
   PostModel.fromJson(json) {
     postId = json['post_id'] ?? '';
     postImageUrl = json['post_image_url'] ?? '';
-    caption = json['body'] ?? '';
+    caption = json['caption'] ?? json['body'];
     userId = json['user_id'] ?? '';
     createdAt = json['posted_at'] ?? Timestamp.now();
     likesCount = json['likes'] ?? [];
