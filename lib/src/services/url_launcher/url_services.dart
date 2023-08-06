@@ -20,7 +20,4 @@ class ContactService{
       throw 'Could not launch';
     }
   }
-
-  openLink(){
-  }
 }

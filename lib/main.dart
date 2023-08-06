@@ -1,11 +1,6 @@
 import 'package:explore_flutter_with_dart_3/firebase_options.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/theme.dart';
-import 'package:explore_flutter_with_dart_3/src/view/admin/add_post/add_post.dart';
-import 'package:explore_flutter_with_dart_3/src/view/admin/advertisement/advertisement.dart';
-import 'package:explore_flutter_with_dart_3/src/view/admin/dashboard/dashboard.dart';
-import 'package:explore_flutter_with_dart_3/src/view/admin/post_lists/post_lists.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/home_page.dart';
-import 'package:explore_flutter_with_dart_3/src/view/public/post_details_screen/post_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,9 +25,10 @@ class MyApp extends ConsumerWidget {
       // designSize: const Size(1920, 1080),
       designSize: const Size(428, 926),
       builder: (context, child) => MaterialApp(
+        title: 'clgister',
         debugShowCheckedModeBanner: false,
-        theme: Themes.lightTheme,
-        darkTheme: Themes.darkTheme,
+        theme: Themes.darkTheme,
+        darkTheme: Themes.lightTheme,
         themeMode: notifier,
           // home: const HomePage(),
           home: const HomePage(),

@@ -5,11 +5,13 @@ import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/screen_size.dart';
 import 'package:explore_flutter_with_dart_3/src/models/post.dart';
+import 'package:explore_flutter_with_dart_3/src/services/url_launcher/url_controller.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/component/comment_and_subscribe.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostView extends ConsumerStatefulWidget {
@@ -59,7 +61,7 @@ class _PostViewState extends ConsumerState<PostView> {
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.w800,
-                fontSize: getFontSize(15),
+                fontSize: getFontSize(19.5),
               ),
             ),
           ),
@@ -67,8 +69,55 @@ class _PostViewState extends ConsumerState<PostView> {
           SizedBox(height: getProportionateScreenHeight(15),),
 
           Row(
-          children: socials(context, ref).toList(),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                  onTap: (){
+                    // final launcher = ref.read(urlControllerProvider.notifier);
+                    String whatsapp = 'https://wa.me/+2349037806442'; //TODO
+                    // launcher.launchUrl(whatsapp);
+                    launchURL(whatsapp);
+                  },
+                  child: const FaIcon(
+                    FontAwesomeIcons.whatsapp, size: 30,
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                  onTap: (){
+                    // final launcher = ref.read(urlControllerProvider.notifier);
+                    String facebook = 'https://www.facebook.com/profile.php?.id=100074370350219'; //TODO
+                    launchURL(facebook);
+                    // launcher.launchUrl(facebook);
+                  },
+                  child: const FaIcon(
+                    FontAwesomeIcons.facebook, size: 30,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                  onTap: (){
+                    // final launcher = ref.read(urlControllerProvider.notifier);
+                    String telegram = 'https://instagram.com/campus_latestgister?igshid=YmMyMTA2M2Y='; //TODO
+                    launchURL(telegram);
+                    // launcher.launchUrl(telegram);
+                  },
+                  child: const FaIcon(
+                    FontAwesomeIcons.instagram, size: 30,
+                  ),
+                ),
+              ),
+            ],
           ),
+          // Row(
+          // children: socials(context, ref).toList(),
+          // ),
 
           SizedBox(height: getProportionateScreenHeight(20),),
           if(widget.post!.postImageUrl.isNotEmpty)
@@ -227,24 +276,79 @@ class _PostViewState extends ConsumerState<PostView> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        widget.post!.title ??'Tuition Hike: Naus Threatens Mass Protest',
+                        widget.post!.title!,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w800,
-                          fontSize: getFontSize(15),
+                          fontSize: getFontSize(18.5),//todo 15
                         ),
                       ),
                     ),
 
                     SizedBox(height: getProportionateScreenHeight(15),),
 
-                    Row(
-                      children: socials(context, ref).toList(),
-                    ),
+                    // Row(
+                    //   children: socials(context, ref).toList(),
+                    // ),
 
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            onTap: (){
+                              // final launcher = ref.read(urlControllerProvider.notifier);
+                              String whatsapp = 'https://wa.me/+2349037806442'; //TODO
+                              // launcher.launchUrl(whatsapp);
+                              launchURL(whatsapp);
+                            },
+                            child: const FaIcon(
+                              FontAwesomeIcons.whatsapp, size: 30,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            onTap: (){
+                              // final launcher = ref.read(urlControllerProvider.notifier);
+                              String facebook = 'https://www.facebook.com/profile.php?.id=100074370350219'; //TODO
+                              launchURL(facebook);
+                              // launcher.launchUrl(facebook);
+                            },
+                            child: const FaIcon(
+                              FontAwesomeIcons.facebook, size: 30,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            onTap: (){
+                              // final launcher = ref.read(urlControllerProvider.notifier);
+                              String telegram = 'https://instagram.com/campus_latestgister?igshid=YmMyMTA2M2Y='; //TODO
+                              launchURL(telegram);
+                              // launcher.launchUrl(telegram);
+                            },
+                            child: const FaIcon(
+                              FontAwesomeIcons.instagram, size: 30,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: getProportionateScreenHeight(20),),
                     if(widget.post!.postImageUrl.isNotEmpty)
-                      Image.network(widget.post!.postImageUrl),
+                      Container(
+                        height: 600,
+                        width: 400,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(widget.post!.postImageUrl,) 
+                          ),
+                        ),
+                      ),
                     SizedBox(height: getProportionateScreenHeight(20),),
 
                     Center(
@@ -257,8 +361,6 @@ class _PostViewState extends ConsumerState<PostView> {
                         ),
                       ),
                     ),
-
-                    // SizedBox(height: getProportionateScreenHeight(35),),
 
 
                     SizedBox(height: getProportionateScreenHeight(20),),

@@ -1,10 +1,8 @@
 // ignore_for_file: avoid_web_libraries_in_flutter, unnecessary_null_comparison
-
 import 'package:explore_flutter_with_dart_3/src/controllers/advert.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/screen_size.dart';
-import 'package:explore_flutter_with_dart_3/src/services/auth/auths_impl.dart';
 import 'package:explore_flutter_with_dart_3/src/view/admin/add_post/component/dropdown.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/text_field.dart';

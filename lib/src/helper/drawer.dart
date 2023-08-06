@@ -7,31 +7,42 @@ import 'package:explore_flutter_with_dart_3/src/view/public/homepage/home_page.d
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomDrawer extends ConsumerWidget {
+class CustomDrawer extends ConsumerStatefulWidget {
   const CustomDrawer({Key? key, required this.scrollController}) : super(key: key);
   final ScrollController scrollController;
   static String routeName = "/customDrawer";
+
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends ConsumerState<CustomDrawer> {
+  @override
+  Widget build(BuildContext context,) {
     // final scrollProvider = ref.watch(scrollNotifierProvider);
     final notifier = ref.watch(themeNotifierProvider);
+    bool? val;
     return Scaffold(
       body: Padding(
         padding: padding.padding,
         child: ListView(
           children: [
-
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: SwitchListTile(
                 title: Text('Theme', style: Theme.of(context).textTheme.bodyMedium,),
-                  // value: notifier.darkTheme,
-                  value: notifier  == ThemeMode.system,
+                  // I just changed this to dark_mode as the default theme as said by the client
+                  // ignore: unrelated_type_equality_checks
+                  value: notifier == ThemeMode.dark,
+
                   onChanged: (onChanged){
-                  ref.read(themeNotifierProvider.notifier).changeTheme(onChanged);
+                  setState(() {
+                    // ignore: unrelated_type_equality_checks
+                    notifier == onChanged;
+                    ref.read(themeNotifierProvider.notifier).changeTheme();
+                  });
               }),
             ),
-
 
             ListTile(
               title: Text(
@@ -45,7 +56,6 @@ class CustomDrawer extends ConsumerWidget {
                 push(context, const Content());
               },
             ),
-
             const SizedBox(height: 20,),
             ListTile(
               title: Text(
@@ -56,7 +66,6 @@ class CustomDrawer extends ConsumerWidget {
                 ),
               ),
               onTap: (){
-                // ref.read(scrollProvider);
                 pop(context);
                 scrollToSection(context, ref, const Key('Sports'));
               },
@@ -71,7 +80,10 @@ class CustomDrawer extends ConsumerWidget {
                     color: Theme.of(context).primaryColor
                 ),
               ),
-              onTap: (){},
+              onTap: (){
+                pop(context);
+                scrollToSection(context, ref, const Key('Education'));
+              },
             ),
             const SizedBox(height: 20,),
             ListTile(
@@ -82,18 +94,24 @@ class CustomDrawer extends ConsumerWidget {
                     color: Theme.of(context).primaryColor
                 ),
               ),
-              onTap: (){},
+              onTap: (){
+                pop(context);
+                scrollToSection(context, ref, const Key('Gists'));
+              },
             ),
             const SizedBox(height: 20,),
             ListTile(
               title: Text(
-                'NYSC',
+                'Relationship & Lifestyle',
                 style: TextStyle(
                     fontSize: getFontSize(12),
                     color: Theme.of(context).primaryColor
                 ),
               ),
-              onTap: (){},
+              onTap: (){
+                pop(context);
+                scrollToSection(context, ref, const Key('Relationship & Lifestyle'));
+              },
             ),
             const SizedBox(height: 20,),
             ListTile(
@@ -113,12 +131,11 @@ class CustomDrawer extends ConsumerWidget {
       ),
     );
   }
-  
-  
+
   void scrollToSection(context, WidgetRef ref,  Key key){
-    // calculate the height of the app bar 
+    // calculate the height of the app bar
     final double appBarHeight = AppBar().preferredSize.height + MediaQuery.of(context).padding.top;
-    
+
     // calculate the position to scroll to based on the category's position in the column
     final int categoryIndex = findCategoryIndex(key);
     final double scrollToPosition = categoryIndex * 200.0 + appBarHeight;
@@ -131,7 +148,7 @@ class CustomDrawer extends ConsumerWidget {
   }
 
   int findCategoryIndex(Key key){
-    
+
     List<Key> keys = const [
       Key('Education'),
       Key('Gists'),

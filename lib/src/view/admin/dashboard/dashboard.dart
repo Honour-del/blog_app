@@ -76,7 +76,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
       height: getProportionateScreenHeight(75),
       width: getProportionateScreenWidth(120),
       style: TextStyle(
-          fontSize: getFontSize(10),
+          fontSize: getFontSize(12),
           fontWeight: FontWeight.w700,
           color: Theme.of(context).scaffoldBackgroundColor
       ),
@@ -101,7 +101,7 @@ Widget _mobile() => Center(
           onTap: (){
             push(context, const Advertise());
           },
-          label: "Manage Advertisement",
+          label: "Manage\nAdvertisement",
           iconData: Icons.people,
         ),
 

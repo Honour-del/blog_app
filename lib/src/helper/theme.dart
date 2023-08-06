@@ -47,13 +47,19 @@ class Themes{
 
 
 
-final themeNotifierProvider = StateNotifierProvider<ThemeProvider, ThemeMode?>((ref) {
+final themeNotifierProvider = StateNotifierProvider<ThemeProvider, ThemeMode>((ref) {
   return ThemeProvider();
 });
+// final themeNotifierProvider = StateProvider<ThemeMode>((ref) {
+//   return ThemeMode.dark;
+// });
 
-class ThemeProvider extends StateNotifier<ThemeMode?>{
+class ThemeProvider extends StateNotifier<ThemeMode>{
   ThemeProvider() : super(ThemeMode.light);
-  void changeTheme(bool? isON){
-    state = isON! ? ThemeMode.dark : ThemeMode.light;
+  void changeTheme(){
+    state = state ==  ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
   }
+  // void changeTheme(bool? isON){
+  //   state = isON! ? ThemeMode.dark : ThemeMode.light;
+  // }
 }

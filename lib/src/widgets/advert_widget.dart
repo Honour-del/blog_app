@@ -17,7 +17,7 @@ class AdvertWidget extends StatelessWidget {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Image.network(image!, height: 150, width: 100,),
+          child: Image.network(image!,),
         ),
       ),
     );

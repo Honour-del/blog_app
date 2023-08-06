@@ -122,50 +122,60 @@ kPrint(toPrint){
 }
 
 
- List<Widget> socials(context, WidgetRef ref) => [
-  Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: GestureDetector(
-      onTap: (){
-        final launcher = ref.read(urlControllerProvider.notifier);
-        String facebook = ''; //TODO
-        launcher.launchUrl(facebook);
-      },
-      child: const FaIcon(
-        FontAwesomeIcons.facebook, size: 30,
-      ),
-    ),
-  ),
+launchURL(String url) async{
+  final uri = Uri.parse(url);
+  if(await canLaunchUrl(uri)){
+    await launchUrl(uri);
+  }else{
+    throw 'Could not launch';
+  }
+}
 
-   Padding(
-     padding: const EdgeInsets.all(10.0),
-     child: GestureDetector(
-       onTap: (){
-         final launcher = ref.read(urlControllerProvider.notifier);
-         String whatsapp = ''; //TODO
-         launcher.launchUrl(whatsapp);
-       },
-       child: const FaIcon(
-         FontAwesomeIcons.whatsapp, size: 30,
-       ),
-     ),
-   ),
-
-   Padding(
-     padding: const EdgeInsets.all(10.0),
-     child: GestureDetector(
-       onTap: (){
-         final launcher = ref.read(urlControllerProvider.notifier);
-         String telegram = ''; //TODO
-         launcher.launchUrl(telegram);
-       },
-       child: const FaIcon(
-         FontAwesomeIcons.telegram, size: 30,
-       ),
-     ),
-   ),
-
-];
+//
+//  List<Widget> socials(context, WidgetRef ref) => [
+//   Padding(
+//     padding: const EdgeInsets.all(10.0),
+//     child: GestureDetector(
+//       onTap: (){
+//         final launcher = ref.read(urlControllerProvider.notifier);
+//         String facebook = 'https://www.facebook.com/profile.php?.id=100074370350219'; //TODO
+//         launcher.launchUrl(facebook);
+//       },
+//       child: const FaIcon(
+//         FontAwesomeIcons.facebook, size: 30,
+//       ),
+//     ),
+//   ),
+//
+//    Padding(
+//      padding: const EdgeInsets.all(10.0),
+//      child: GestureDetector(
+//        onTap: (){
+//          final launcher = ref.read(urlControllerProvider.notifier);
+//          String whatsapp = 'https://wa.me/+2349037806442'; //TODO
+//          launcher.launchUrl(whatsapp);
+//        },
+//        child: const FaIcon(
+//          FontAwesomeIcons.whatsapp, size: 30,
+//        ),
+//      ),
+//    ),
+//
+//    Padding(
+//      padding: const EdgeInsets.all(10.0),
+//      child: GestureDetector(
+//        onTap: (){
+//          final launcher = ref.read(urlControllerProvider.notifier);
+//          String telegram = 'https://instagram.com/campus_latestgister?igshid=YmMyMTA2M2Y='; //TODO
+//          launcher.launchUrl(telegram);
+//        },
+//        child: const FaIcon(
+//          FontAwesomeIcons.instagram, size: 30,
+//        ),
+//      ),
+//    ),
+//
+// ];
 
 
 final List<String> categoryItems = [
@@ -217,10 +227,10 @@ var uuid = const Uuid()..v4().toString();
 
 final padding = Padding(
   padding: EdgeInsets.only(
-      left: getProportionateScreenWidth(40),
-      right: getProportionateScreenWidth(40),
-      top: getProportionateScreenHeight(70),
-      bottom: getProportionateScreenHeight(70)  //70
+      left: getProportionateScreenWidth(30),
+      right: getProportionateScreenWidth(30),
+      top: getProportionateScreenHeight(65),
+      bottom: getProportionateScreenHeight(65)  //70
   ),
 );
 
@@ -308,14 +318,14 @@ container(BuildContext context, Widget child){
   );
 }
 
-launchURL(String url) async{
-  final uri = Uri.parse(url);
-  if(await canLaunchUrl(uri)){
-    await launchUrl(uri);
-  }else{
-    throw 'Could not launch';
-  }
-}
+// launchURL(String url) async{
+//   final uri = Uri.parse(url);
+//   if(await canLaunchUrl(uri)){
+//     await launchUrl(uri);
+//   }else{
+//     throw 'Could not launch';
+//   }
+// }
 
 PreferredSizeWidget appBar(BuildContext context) {
   return AppBar(

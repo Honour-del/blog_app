@@ -37,13 +37,16 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                 width: getProportionateScreenWidth(300),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                  child: Column(
+                  child: ListView(
+                    shrinkWrap: true,
                     children: [
-                      Text(
-                        "Welcome to CLG",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w900,
+                      Center(
+                        child: Text(
+                          "Welcome to CLG",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 30,),
@@ -71,19 +74,6 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                         ),
                         onTap: (){
                           loginAction();
-                          // setState(() {
-                          //   loading = true;
-                          // });
-                          // ref.read(authControllerProvider.notifier)
-                          //     .register(
-                          //   email: _email.text,
-                          //   password: _password.text,
-                          // );
-                          // setState(() {
-                          //   loading = false;
-                          // });
-                          // debugPrint("Successfully Registered");
-                          // push(context, const Dashboard());
                         },
                       ),
                     ],

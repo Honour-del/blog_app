@@ -9,6 +9,7 @@ import 'package:explore_flutter_with_dart_3/src/view/admin/welcome/welcome_page.
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/component/comment_and_subscribe.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/component/side_drawer.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/post_details_screen/post_view.dart';
+import 'package:explore_flutter_with_dart_3/src/view/public/searchlist/search_result.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/footer.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,8 @@ class _HomePageState extends ConsumerState<HomePage> {
            Text(
              'Looking for something? Search below',
              style: TextStyle(
-                 fontSize: getFontSize(20)
+                 fontSize: getFontSize(20),
+               color: Theme.of(context).primaryColor
              ),
            ),
 
@@ -165,7 +167,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                          color: Theme.of(context).scaffoldBackgroundColor
                      ),
                      onTap: (){
-                       //todo
+                       push(context, SearchScreen(search: _search.text,));
                      },
                    ),
 
@@ -549,6 +551,7 @@ class ContentAll extends ConsumerWidget {
                             color: Theme.of(context).scaffoldBackgroundColor
                         ),
                         onTap: (){
+                          push(context, SearchScreen(search: _search.text,));
                         },
                       ),
                     ),
