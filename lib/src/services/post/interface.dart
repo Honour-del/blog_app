@@ -64,6 +64,7 @@ abstract class CreatePost {
     required String postId});
 
   Future<List<PostModel>> fetchPostByCategory({String? category});
+  Future<PostModel> fetchPostById({String? id});
 
   Future<List<PostModel>> fetchPosts();
 }

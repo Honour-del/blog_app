@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/models/post.dart';
 import 'package:explore_flutter_with_dart_3/src/services/post/interface.dart';
@@ -157,6 +158,21 @@ class CreatePostImpl implements CreatePost{
 
     final posts = querySnap.docs.map((e) => PostModel.fromJson(e.data())).toList();
     return posts;
+  }
+
+  @override
+  Future<PostModel> fetchPostById({String? id}) async{
+    print("this postId: $id");
+    final DocumentSnapshot querySnap = await postsRef.doc(id).get();
+
+    final data = querySnap.data() as Map<String, dynamic>;
+    // final querySnap = await postsRef.where('post_id', isEqualTo: id)
+    //     .get();
+    //
+    // final posts = querySnap.docs.map((e) => PostModel.fromJson(e.data())).toList();
+    //
+    // final post = posts.first;
+    return PostModel.fromJson(data);
   }
 
   @override

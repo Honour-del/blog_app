@@ -2,6 +2,7 @@ import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/screen_size.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/scroll_controller.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/theme.dart';
+import 'package:explore_flutter_with_dart_3/src/services/router.dart';
 import 'package:explore_flutter_with_dart_3/src/view/admin/welcome/welcome_page.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/home_page.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +125,8 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
               ),
               onTap: (){
                 push(context, const WelcomePage());
+                // Navigator.pushNamed(context, "/home/login");
+                Application.router!.navigateTo(context, "/login");
               },
             ),
           ],

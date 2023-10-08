@@ -1,6 +1,7 @@
 import 'package:explore_flutter_with_dart_3/src/controllers/search.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/constants.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
+import 'package:explore_flutter_with_dart_3/src/services/router.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/post_details_screen/post_view.dart';
 import 'package:explore_flutter_with_dart_3/src/widgets/cards.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     final post = data[index];
                     return GestureDetector(
                       onTap: (){
-                        push(context, PostView(post: post));
+                        print(post.postId);
+                        Application.router!.navigateTo(context, "/home/postView/${post.postId}");
+                        // push(context, PostView(postId: post.postId));
                       },
                       child: PostCard(
                         title: post.title,
@@ -90,7 +93,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   final post = data[index];
                   return GestureDetector(
                     onTap: (){
-                      push(context, PostView(post: post));
+                      print(post.postId);
+                      Application.router!.navigateTo(context, "/home/postView/${post.postId}");
+                      // push(context, PostView(postId: post.postId));
                     },
                     child: PostCard(
                       title: post.title,

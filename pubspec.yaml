@@ -55,6 +55,9 @@ dependencies:
   path_provider:
   dio:
   dartz:
+  url_strategy:
+  fluro:
+
 
 dev_dependencies:
   flutter_test:

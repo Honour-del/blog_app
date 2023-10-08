@@ -5,6 +5,7 @@ import 'package:explore_flutter_with_dart_3/src/helper/drawer.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/responsive.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/screen_size.dart';
 import 'package:explore_flutter_with_dart_3/src/helper/scroll_controller.dart';
+import 'package:explore_flutter_with_dart_3/src/services/router.dart';
 import 'package:explore_flutter_with_dart_3/src/view/admin/welcome/welcome_page.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/component/comment_and_subscribe.dart';
 import 'package:explore_flutter_with_dart_3/src/view/public/homepage/component/side_drawer.dart';
@@ -182,9 +183,12 @@ class _HomePageState extends ConsumerState<HomePage> {
            _categoryHeader(),
            ...latestNews.map((e) => GestureDetector(
              onTap: (){
-               push(context, PostView(
-                 post: e,
-               ));
+               print(e.postId);
+               Application.router!.navigateTo(context, "/home/postView/${e.postId}");
+               // push(context, PostView(
+               //   postId: e.postId,
+               // ));
+
              },
              child: PostCard(
                title: e.title,
@@ -198,9 +202,11 @@ class _HomePageState extends ConsumerState<HomePage> {
              _categoryHeader(title: 'Gists'),
            ...gists.map((e) => GestureDetector(
              onTap: (){
-               push(context, PostView(
-                 post: e,
-               ));
+               print(e.postId);
+               Application.router!.navigateTo(context, "/home/postView/${e.postId}");
+               // push(context, PostView(
+               //   postId: e.postId,
+               // ));
              },
              child: PostCard(
                authorName: e.authorName,
@@ -214,9 +220,11 @@ class _HomePageState extends ConsumerState<HomePage> {
              _categoryHeader(title: "Relationship & Lifestyle"),
            ...lifeStyle.map((e) => GestureDetector(
              onTap: (){
-               push(context, PostView(
-                 post: e,
-               ));
+               print(e.postId);
+               Application.router!.navigateTo(context, "/home/postView/${e.postId}");
+               // push(context, PostView(
+               //   postId: e.postId,
+               // ));
              },
              child: PostCard(
                authorName: e.authorName,
@@ -230,9 +238,11 @@ class _HomePageState extends ConsumerState<HomePage> {
              _categoryHeader(title: "Education"),
            ...education.map((e) => GestureDetector(
              onTap: (){
-               push(context, PostView(
-                 post: e,
-               ));
+               print(e.postId);
+               Application.router!.navigateTo(context, "/home/postView/${e.postId}");
+               // push(context, PostView(
+               //   postId: e.postId,
+               // ));
              },
              child: PostCard(
                authorName: e.authorName,
@@ -246,9 +256,11 @@ class _HomePageState extends ConsumerState<HomePage> {
              _categoryHeader(title: 'Sports'),
            ...sport.map((e) => GestureDetector(
              onTap: (){
-               push(context, PostView(
-                 post: e,
-               ));
+               print(e.postId);
+               Application.router!.navigateTo(context, "/home/postView/${e.postId}");
+               // push(context, PostView(
+               //   postId: e.postId,
+               // ));
              },
              child: PostCard(
                title: e.title,
@@ -431,9 +443,12 @@ class Content extends ConsumerWidget {
                           ),
                           itemBuilder: (context, index) {
                             final post = data[index];
+                            // String id = post.postId;
                             return GestureDetector(
                               onTap: (){
-                                push(context, PostView(post: post,));
+                                // push(context, PostView(post: post,));
+                                print(post.postId);
+                                Application.router!.navigateTo(context, "/home/postView/${post.postId}");
                               },
                               child: PostCard(
                                 title: post.title,
@@ -596,7 +611,9 @@ class ContentAll extends ConsumerWidget {
                             final post = data[index];
                             return GestureDetector(
                               onTap: (){
-                                push(context, PostView(post: post,));
+                                print(post.postId);
+                                Application.router!.navigateTo(context, "/home/postView/${post.postId}");
+                                // push(context, PostView(postId: post.postId,));
                               },
                               child: PostCard(
                                 title: post.title,
